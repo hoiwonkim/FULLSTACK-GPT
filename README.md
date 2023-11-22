@@ -1,0 +1,1 @@
+env\Scripts\Activate.ps1 - env환경을 들어가기

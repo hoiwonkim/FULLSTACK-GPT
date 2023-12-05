@@ -1,4 +1,5 @@
 env\Scripts\Activate.ps1 - env환경을 들어가기
+streamlit run Home.py
 
 jupter 사용 단축키
 Windows 전용 단축키입니다.

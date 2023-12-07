@@ -1,4 +1,3 @@
-# import time
 from langchain.prompts import ChatPromptTemplate
 from langchain.document_loaders import UnstructuredFileLoader
 from langchain.embeddings import CacheBackedEmbeddings, OpenAIEmbeddings
@@ -23,6 +22,7 @@ class ChatCallbackHandler(BaseCallbackHandler):
 
     def on_llm_end(self, *args, **kwargs):
         save_message(self.message, "ai")
+        add_to_history(self.message, "ai")
 
     def on_llm_new_token(self, token, *args, **kwargs):
         self.message += token
@@ -36,24 +36,6 @@ llm = ChatOpenAI(
     ],
 )
 
-# st.title("DocumentGPT")
-
-# if "messages" not in st.session_state:
-#     st.session_state["messages"] = []
-
-
-# def send_message(message, role, save=True):
-#     with st.chat_message(role):
-#         st.write(message)
-#     if save:
-#         st.session_state["messages"].append({"message": message, "role": role}) """
-
-# for message in st.session_state["messages"]:
-#     send_message(
-#         message["message"],
-#         message["role"],
-#         save=False,
-
 @st.cache_data(show_spinner="Embedding file...")
 def embed_file(file):
     file_content = file.read()
@@ -66,7 +48,7 @@ def embed_file(file):
         chunk_size=600,
         chunk_overlap=100,
     )
-    loader = UnstructuredFileLoader("./files/chapter_one.txt")
+    loader = UnstructuredFileLoader(file_path)
     docs = loader.load_and_split(text_splitter=splitter)
     embeddings = OpenAIEmbeddings()
     cached_embeddings = CacheBackedEmbeddings.from_bytes_store(embeddings, cache_dir)
@@ -75,7 +57,14 @@ def embed_file(file):
     return retriever
 
 def save_message(message, role):
+    if "messages" not in st.session_state:
+        st.session_state["messages"] = []
     st.session_state["messages"].append({"message": message, "role": role})
+
+def add_to_history(message, role):
+    if "history" not in st.session_state:
+        st.session_state["history"] = []
+    st.session_state["history"].append({"message": message, "role": role})
 
 def send_message(message, role, save=True):
     with st.chat_message(role):
@@ -83,18 +72,17 @@ def send_message(message, role, save=True):
     if save:
         save_message(message, role)
 
-
 def paint_history():
-    for message in st.session_state["messages"]:
-        send_message(
-            message["message"],
-            message["role"],
-            save=False,
-        )
+    if "messages" in st.session_state:
+        for message in st.session_state["messages"]:
+            send_message(
+                message["message"],
+                message["role"],
+                save=False,
+            )
 
 def format_docs(docs):
     return "\n\n".join(document.page_content for document in docs)
-
 
 prompt = ChatPromptTemplate.from_messages(
     [
@@ -110,7 +98,6 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-# message = st.chat_input("Send a message to the ai ")
 st.title("DocumentGPT")
 
 st.markdown(
@@ -123,17 +110,11 @@ Upload your files on the sidebar.
 """
 )
 
-# if message:
-#     send_message(message, "human")
-#     time.sleep(2)
-#     send_message(f"You said: {message}", "ai") 
 with st.sidebar:
     file = st.file_uploader(
         "Upload a .txt .pdf or .docx file",
         type=["pdf", "txt", "docx"],
     )
-    # with st.sidebar:
-    #     st.write(st.session_state)   
 
 if file:
     retriever = embed_file(file)
@@ -142,17 +123,30 @@ if file:
     message = st.chat_input("Ask anything about your file...")
     if message:
         send_message(message, "human")
+        if "history" in st.session_state:
+            context = "\n".join([m["message"] for m in st.session_state["history"]])
+        else:
+            context = ""
+
+        # context를 처리하는 수정된 함수 정의
+        def get_context(*args):
+            return context
+
+        # retriever_sequence 구성
+        retriever_sequence = retriever | RunnableLambda(format_docs)
+
+        # chain 구성 수정
         chain = (
             {
-                "context": retriever | RunnableLambda(format_docs),
+                "context": RunnableLambda(get_context) | retriever_sequence,
                 "question": RunnablePassthrough(),
             }
             | prompt
             | llm
         )
         with st.chat_message("ai"):
-            # response = chain.invoke(message)
             chain.invoke(message)
 
 else:
     st.session_state["messages"] = []
+

@@ -1,4 +1,6 @@
-from langchain.document_loaders import SitemapLoader, text
+import re
+from bs4 import BeautifulSoup
+from langchain.document_loaders import SitemapLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import streamlit as st
 
@@ -10,12 +12,14 @@ def parse_page(soup):
         header.decompose()
     if footer:
         footer.decompose()
-    return (
-        str(soup.get_text())
-        .replace("\n", " ")
-        .replace("\xa0", " ")
-        .replace("CloseSearch Submit Blog", "")
-    )
+    
+    text = str(soup.get_text())
+    text = text.replace("\n", " ").replace("\xa0", " ").replace("CloseSearch Submit Blog", "")
+
+    # 'author'와 'view all article' 부분 제거
+    text = re.sub(r"author: \w+ \w+|view all articles", "", text, flags=re.IGNORECASE)
+
+    return text
 
 
 @st.cache_data(show_spinner="Loading website...")

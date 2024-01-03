@@ -1,7 +1,25 @@
 env\Scripts\Activate.ps1 - env환경을 들어가기
 streamlit run Home.py
-SiteGPT: npm install playwright
+PrivateGPT: 
+1. WSL 활성화: Windows에서 WSL 기능을 활성화해야 합니다. 이를 위해 PowerShell을 관리자 권한으로 실행한 후 다음 명령어를 입력합니다:
 
+wsl --install
+이 명령은 WSL과 함께 Ubuntu Linux 배포판을 설치합니다.
+
+WSL 업데이트: 최신 버전의 WSL을 사용하는 것이 좋습니다. WSL 업데이트는 Microsoft Store를 통해 할 수 있습니다.
+
+리눅스 배포판 실행: 설치가 완료되면, 시작 메뉴에서 Ubuntu를 검색하여 실행합니다.
+
+2. Ollama 설치: Ubuntu 터미널이 열리면, Ollama를 설치하기 위한 명령어를 입력합니다. 일반적으로 Ollama의 설치 스크립트를 사용하여 설치할 수 있습니다. 예를 들어:
+
+curl https://ollama.ai/install.sh | sh
+이 명령은 Ollama의 설치 스크립트를 다운로드하고 실행합니다.
+
+3. Ollama 실행 확인: 설치가 완료되면, Ollama가 제대로 설치되었는지 확인하기 위해 다음 명령어를 입력할 수 있습니다:
+
+ollama --version
+
+SiteGPT: npm install playwright
 jupter 사용 단축키
 Windows 전용 단축키입니다.
 

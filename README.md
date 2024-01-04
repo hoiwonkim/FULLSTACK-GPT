@@ -19,6 +19,21 @@ curl https://ollama.ai/install.sh | sh
 
 ollama --version
 
+Metting GPT
+1. choco install ffmpeg-full 명령어를 실행할 때 관리자 권한이 필요합니다. 관리자 권한으로 PowerShell 또는 명령 프롬프트를 실행하여 설치 과정을 진행해야 합니다. 다음과 같이 진행해주세요:
+
+2. 관리자 권한으로 PowerShell 또는 명령 프롬프트 실행:
+Windows 검색 바에서 'PowerShell' 또는 '명령 프롬프트'를 검색합니다.
+나타난 결과에서 마우스 오른쪽 버튼을 클릭하고 '관리자 권한으로 실행'을 선택합니다.
+
+3. Chocolatey를 이용한 FFmpeg 설치:
+관리자 권한으로 열린 PowerShell 또는 명령 프롬프트에서 choco install ffmpeg-full을 입력하고 실행합니다.
+설치 동의를 물어보면 'Y'를 눌러 진행합니다.
+
+4. ffmpeg using command in the terminal
+
+5. ffmpeg -i files/podcast.mp4 -vn files/audio.mp3
+
 SiteGPT: npm install playwright
 jupter 사용 단축키
 Windows 전용 단축키입니다.

@@ -1,5 +1,6 @@
 env\Scripts\Activate.ps1 - env환경을 들어가기
 streamlit run Home.py
+
 PrivateGPT: 
 1. WSL 활성화: Windows에서 WSL 기능을 활성화해야 합니다. 이를 위해 PowerShell을 관리자 권한으로 실행한 후 다음 명령어를 입력합니다:
 

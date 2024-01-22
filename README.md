@@ -46,6 +46,28 @@ Windows 전용 단축키입니다.
 - D D: 선택된 셀 삭제하기
 - A / B: 위로(A) 혹은 아래로(B) 새로운 셀 생성하기
 
+# INVESTOR GPT
+알파 밴티지를 사용하고 싶지 않다면 야후 파이낸스를 사용할 수도 있습니다.
+ - pip install yfinance
+
+ msft = yf.Ticker("MSFT") # microsoft
+
+# get historical market data
+hist = msft.history(period="1mo")
+# show financials:
+# - income statement
+msft.income_stmt
+msft.quarterly_income_stmt
+# - balance sheet
+msft.balance_sheet
+msft.quarterly_balance_sheet
+# - cash flow statement
+msft.cashflow
+msft.quarterly_cashflow
+# show news
+msft.news
+
+
 # Fullstack GPT
 
 랭체인으로 AI 웹 서비스 7개 만들기
